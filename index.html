@@ -3,361 +3,156 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Snowfall + Buttons</title>
+<title>Snowy Website</title>
 <style>
-  :root{
-    --bg:#0f1724;
-    --panel: rgba(255,255,255,0.07);
-    --glass: rgba(255,255,255,0.04);
-    --accent: #7dd3fc;
-    --text:#e6eef6;
-    --muted: rgba(230,238,246,0.7);
-  }
-
-  html,body{
-    height:100%;
-    margin:0;
-    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-    background: linear-gradient(180deg,var(--bg) 0%, #071428 60%, #08111b 100%);
-    color:var(--text);
-    -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
-  }
-
-  /* Canvas fills screen */
-  #snow-canvas{
-    position:fixed;
-    inset:0;
-    display:block;
-    z-index:0;
-  }
-
-  /* Top control bar */
-  .controls{
-    position:fixed;
-    left:50%;
-    transform:translateX(-50%);
-    top:18px;
-    z-index:10;
-    display:flex;
-    gap:10px;
-    align-items:center;
-    backdrop-filter: blur(6px) saturate(1.1);
-    background: linear-gradient(180deg,var(--panel), var(--glass));
-    padding:10px;
-    border-radius:12px;
-    box-shadow: 0 6px 20px rgba(4,8,16,0.45);
-    border: 1px solid rgba(255,255,255,0.04);
-  }
-
-  .btn{
-    background:transparent;
-    border:1px solid rgba(255,255,255,0.08);
-    color:var(--text);
-    padding:8px 12px;
-    border-radius:8px;
-    cursor:pointer;
-    font-weight:600;
-    font-size:14px;
-    transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
-    display:inline-flex;
-    gap:8px;
-    align-items:center;
-  }
-  .btn:hover{ transform: translateY(-3px); box-shadow: 0 6px 18px rgba(13, 58, 86, 0.25); }
-  .btn:active{ transform: translateY(-1px); }
-
-  .btn.primary{
-    background: linear-gradient(90deg, rgba(125,211,252,0.14), rgba(99,102,241,0.06));
-    border: 1px solid rgba(125,211,252,0.18);
+  html, body {
+    margin: 0;
+    height: 100%;
+    background: linear-gradient(180deg, #0f1724, #071428);
+    overflow: hidden;
+    font-family: "Segoe UI", sans-serif;
     color: white;
   }
 
-  .btn.ghost{
-    background: transparent;
-    border-style:dashed;
-    color:var(--muted);
+  /* Snow canvas */
+  #snow-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
   }
 
-  .controls label{
-    display:inline-flex;
-    gap:8px;
-    align-items:center;
-    color:var(--muted);
-    font-size:13px;
+  /* Layout container */
+  .content {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
   }
 
-  input[type="range"]{
-    width:140px;
-    accent-color: #7dd3fc;
+  /* Label section style */
+  .section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255,255,255,0.08);
+    padding: 20px 30px;
+    border-radius: 12px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
   }
 
-  .example-buttons{
-    position:fixed;
-    right:18px;
-    bottom:18px;
-    z-index:10;
-    display:flex;
-    flex-direction:column;
-    gap:8px;
+  .section-label {
+    font-size: 18px;
+    font-weight: bold;
+    letter-spacing: 1px;
   }
 
-  .example-buttons .btn{
-    padding:10px 14px;
-    font-size:14px;
-    border-radius:10px;
+  .buttons {
+    display: flex;
+    gap: 10px;
   }
 
-  /* Footer text */
-  .footer-note{
-    position:fixed;
-    left:18px;
-    bottom:18px;
-    z-index:10;
-    color:var(--muted);
-    font-size:13px;
-    background: rgba(255,255,255,0.02);
-    padding:8px 10px;
-    border-radius:8px;
+  button {
+    background: rgba(255,255,255,0.1);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
   }
 
-  /* Respect reduced motion */
-  @media (prefers-reduced-motion: reduce) {
-    .btn { transition: none; transform: none !important; }
-  }
-
-  /* Small screens: make controls wrap */
-  @media (max-width:520px){
-    .controls{ left:12px; transform:none; top:auto; bottom:18px; right:12px; flex-wrap:wrap; width:calc(100% - 64px); justify-content:center; }
+  button:hover {
+    background: rgba(255,255,255,0.2);
+    transform: translateY(-2px);
   }
 </style>
 </head>
 <body>
-<canvas id="snow-canvas" aria-hidden="true"></canvas>
+<canvas id="snow-canvas"></canvas>
 
-<!-- Controls -->
-<div class="controls" role="region" aria-label="Snow controls">
-  <button id="toggle-btn" class="btn primary" aria-pressed="false">Pause Snow ❄️</button>
+<div class="content">
+  <div class="section">
+    <div class="section-label">[ THIS IS A LABEL ]</div>
+    <div class="buttons">
+      <button>Button 1</button>
+      <button>Button 2</button>
+      <button>Button 3</button>
+    </div>
+  </div>
 
-  <label for="speed">Speed
-    <input id="speed" type="range" min="0" max="3" step="0.1" value="1" aria-label="Snow speed">
-  </label>
-
-  <label for="density">Density
-    <input id="density" type="range" min="0" max="1.5" step="0.05" value="1" aria-label="Snow density">
-  </label>
-
-  <button id="clear-btn" class="btn ghost" title="Clear all flakes">Clear</button>
+  <div class="section">
+    <div class="section-label">[ ANOTHER LABEL ]</div>
+    <div class="buttons">
+      <button>Action A</button>
+      <button>Action B</button>
+    </div>
+  </div>
 </div>
-
-<!-- Some example action buttons -->
-<div class="example-buttons" role="region" aria-label="Example actions">
-  <button class="btn" id="action-1">Example Link</button>
-  <button class="btn" id="action-2">Open Modal</button>
-</div>
-
-<div class="footer-note">Tip: use <kbd>prefers-reduced-motion</kbd> to reduce animation.</div>
 
 <script>
-/*
-  Snowfall canvas script
-  - Responsive canvas
-  - Particle system: flakes with size, speed, sway
-  - Controls: start/stop, speed multiplier, density (flake count), clear
-  - Respects prefers-reduced-motion
-*/
+// --- Simple Snowfall Script ---
+const canvas = document.getElementById("snow-canvas");
+const ctx = canvas.getContext("2d");
+let w = (canvas.width = window.innerWidth);
+let h = (canvas.height = window.innerHeight);
 
-// Basic helpers
-const canvas = document.getElementById('snow-canvas');
-const ctx = canvas.getContext('2d', { alpha: true });
-let w = canvas.width = innerWidth;
-let h = canvas.height = innerHeight;
+window.addEventListener("resize", () => {
+  w = canvas.width = window.innerWidth;
+  h = canvas.height = window.innerHeight;
+});
 
-// Accessibility: respect reduced motion
-const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const numFlakes = 200;
+const flakes = [];
 
-// Settings (mutable by UI)
-const settings = {
-  running: true,
-  baseSpeed: 1,    // speed multiplier
-  density: 1,      // 0..1.5 (multiplies particle count)
-  maxFlakesPer1000px: 0.22 // controls baseline flake density per px width
-};
+for (let i = 0; i < numFlakes; i++) {
+  flakes.push({
+    x: Math.random() * w,
+    y: Math.random() * h,
+    r: Math.random() * 3 + 1,
+    d: Math.random() + 1
+  });
+}
 
-// Particle class
-class Flake {
-  constructor() {
-    this.reset(true);
+function drawFlakes() {
+  ctx.clearRect(0, 0, w, h);
+  ctx.fillStyle = "white";
+  ctx.beginPath();
+  for (let i = 0; i < numFlakes; i++) {
+    const f = flakes[i];
+    ctx.moveTo(f.x, f.y);
+    ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2, true);
   }
-  reset(justCreated=false){
-    // spawn at random x across width, y slightly above or at top
-    this.x = Math.random() * w;
-    this.y = justCreated ? Math.random() * h : -10 - Math.random() * h * 0.2;
-    this.size = 1 + Math.random() * 5; // 1..6
-    // speed influenced by size (bigger falls faster)
-    this.vy = (0.2 + Math.random() * 1.4) * (this.size/3) * (0.6 + Math.random()*0.9);
-    this.vx = Math.random() * 0.8 - 0.4; // small horizontal drift
-    this.sway = Math.random() * 2 + 0.6; // how much it sways
-    this.phase = Math.random() * Math.PI * 2;
-    this.opacity = 0.4 + Math.random() * 0.7;
-    this.tilt = Math.random() * 0.8 - 0.4;
-  }
-  update(dt, time){
-    // dt in seconds, time in seconds
-    // vertical movement
-    this.y += this.vy * dt * 60 * settings.baseSpeed;
-    // horizontal sway using sine wave
-    this.x += Math.sin(this.phase + time * 0.6 * this.sway) * (0.3 * this.sway) * settings.baseSpeed + this.vx * settings.baseSpeed;
-    // slight rotation / tilt
-    this.tilt += 0.01 * this.sway * settings.baseSpeed;
-    // reset if off-screen
-    if (this.y - this.size > h || this.x < -50 || this.x > w + 50) {
-      this.reset();
-      this.y = -10;
+  ctx.fill();
+  moveFlakes();
+}
+
+let angle = 0;
+function moveFlakes() {
+  angle += 0.01;
+  for (let i = 0; i < numFlakes; i++) {
+    const f = flakes[i];
+    f.y += Math.pow(f.d, 2) + 1;
+    f.x += Math.sin(angle) * 0.5;
+
+    if (f.y > h) {
+      flakes[i] = { x: Math.random() * w, y: 0, r: f.r, d: f.d };
     }
   }
-  draw(ctx){
-    ctx.save();
-    ctx.globalAlpha = Math.max(0, Math.min(1, this.opacity));
-    // draw a soft circle (improves performance vs shadows while still soft)
-    const grad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size*1.6);
-    grad.addColorStop(0, 'rgba(255,255,255,0.95)');
-    grad.addColorStop(0.5, 'rgba(255,255,255,0.7)');
-    grad.addColorStop(1, 'rgba(255,255,255,0.02)');
-    ctx.fillStyle = grad;
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-  }
 }
 
-// Create flakes depending on density and viewport
-let flakes = [];
-function createFlakes(){
-  flakes = [];
-  // baseline count based on width and density
-  // formula: width * height * maxFlakesPer1000px -> normalized per screen area
-  const areaFactor = (w * h) / (1000 * 1000); // scale to millions of pixels
-  const base = Math.round((w * settings.maxFlakesPer1000px) * 1.6 * settings.density);
-  const count = Math.max(20, Math.min(1400, Math.round(base * (reducedMotion ? 0.25 : 1))));
-  for (let i=0;i<count;i++) flakes.push(new Flake());
+function animate() {
+  drawFlakes();
+  requestAnimationFrame(animate);
 }
 
-// Resize handler
-function onResize(){
-  w = canvas.width = innerWidth;
-  h = canvas.height = innerHeight;
-  createFlakes();
-}
-addEventListener('resize', debounce(onResize, 120));
-onResize();
-
-// Animation loop
-let last = performance.now();
-let time = 0;
-function frame(now){
-  const dt = (now - last) / 1000; // seconds
-  last = now;
-  if (!settings.running || reducedMotion) {
-    // still draw once so canvas is visible
-    if (reducedMotion){
-      ctx.clearRect(0,0,w,h);
-      // one subtle background dust when reduced
-      drawReduced(ctx);
-      requestAnimationFrame(frame);
-      return;
-    }
-  }
-
-  time += dt;
-  ctx.clearRect(0,0,w,h);
-
-  // gentle vignette background overlay (subtle)
-  // (drawn as a faint rectangle first so snow stands out)
-  // Main drawing: flakes
-  for (let flake of flakes){
-    flake.update(dt, time);
-    flake.draw(ctx);
-  }
-
-  requestAnimationFrame(frame);
-}
-requestAnimationFrame(frame);
-
-// Reduced motion drawing (single subtle layer)
-function drawReduced(ctx){
-  ctx.fillStyle = "rgba(255,255,255,0.02)";
-  ctx.fillRect(0,0,w,h);
-}
-
-// UI wiring
-const toggleBtn = document.getElementById('toggle-btn');
-const speedRange = document.getElementById('speed');
-const densityRange = document.getElementById('density');
-const clearBtn = document.getElementById('clear-btn');
-
-toggleBtn.addEventListener('click', ()=>{
-  settings.running = !settings.running;
-  toggleBtn.setAttribute('aria-pressed', String(!settings.running));
-  toggleBtn.textContent = settings.running ? 'Pause Snow ❄️' : 'Resume Snow ❄️';
-});
-
-speedRange.addEventListener('input', (e)=>{
-  settings.baseSpeed = Number(e.target.value);
-});
-
-densityRange.addEventListener('input', (e)=>{
-  settings.density = Number(e.target.value);
-  // create flakes to match new density while preserving approximate positions
-  // simple approach: recreate set
-  createFlakes();
-});
-
-clearBtn.addEventListener('click', ()=>{
-  // clear flakes by emptying and redrawing (pauses briefly)
-  flakes = [];
-});
-
-// Example action buttons -- replace with your actual actions
-document.getElementById('action-1').addEventListener('click', ()=>{
-  window.open('https://vercel.com','_blank');
-});
-document.getElementById('action-2').addEventListener('click', ()=>{
-  alert('Modal would open (example). Replace with your modal code.');
-});
-
-// Utility: debounce
-function debounce(fn, wait){
-  let t;
-  return (...a)=>{
-    clearTimeout(t);
-    t = setTimeout(()=>fn(...a), wait);
-  };
-}
-
-// initialize simple autosave of settings in localStorage (non-blocking)
-try {
-  const saved = JSON.parse(localStorage.getItem('snowSettings') || 'null');
-  if (saved){
-    if (saved.baseSpeed !== undefined) { settings.baseSpeed = saved.baseSpeed; speedRange.value = saved.baseSpeed; }
-    if (saved.density !== undefined) { settings.density = saved.density; densityRange.value = saved.density; }
-  }
-  setInterval(()=> {
-    localStorage.setItem('snowSettings', JSON.stringify({ baseSpeed: settings.baseSpeed, density: settings.density }));
-  }, 2000);
-} catch(e){ /* ignore */ }
-
-// Kick off initial flicker-free draw
-(function warmStart(){
-  if (!reducedMotion) {
-    // animate-in some flakes immediately so canvas is populated
-    for (let i=0;i<Math.min(50, flakes.length);i++){
-      flakes[i].y = Math.random() * h;
-    }
-  }
-})();
-
+animate();
 </script>
 </body>
 </html>

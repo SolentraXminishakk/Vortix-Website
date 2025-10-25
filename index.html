@@ -70,6 +70,8 @@
   .buttons {
     display: flex;
     gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
   }
 
   button {
@@ -87,6 +89,18 @@
     background: rgba(255,255,255,0.2);
     transform: translateY(-2px);
   }
+
+  .copied {
+    position: fixed;
+    bottom: 30px;
+    background: rgba(255,255,255,0.15);
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    backdrop-filter: blur(10px);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
 </style>
 </head>
 <body>
@@ -101,15 +115,14 @@
     </div>
   </div>
   
-<div class="content">
   <div class="section">
     <div class="section-label">Scripts</div>
     <div class="buttons">
-      <button>Murder Mystery 2 Script</button>
-      <button>Ink Games Script</button>
-      <button>Build A Car</button>
-      <button>Apocalypse Tycoon</button>
-      <button>Vortix ServerSide</button>
+      <button onclick="copyScript('Murder Mystery 2')">Murder Mystery 2 Script</button>
+      <button onclick="copyScript('Ink Games')">Ink Games Script</button>
+      <button onclick="copyScript('Build A Car')">Build A Car</button>
+      <button onclick="copyScript('Apocalypse Tycoon')">Apocalypse Tycoon</button>
+      <button onclick="copyScript('Vortix ServerSide')">Vortix ServerSide</button>
     </div>
   </div>
 
@@ -124,8 +137,10 @@
   </div>
 </div>
 
-<script>
+<div id="copy-toast" class="copied">Copied to clipboard!</div>
 
+<script>
+/* SNOW EFFECT */
 const canvas = document.getElementById("snow-canvas");
 const ctx = canvas.getContext("2d");
 let w = (canvas.width = window.innerWidth);
@@ -138,7 +153,6 @@ window.addEventListener("resize", () => {
 
 const numFlakes = 200;
 const flakes = [];
-
 for (let i = 0; i < numFlakes; i++) {
   flakes.push({
     x: Math.random() * w,
@@ -148,6 +162,7 @@ for (let i = 0; i < numFlakes; i++) {
   });
 }
 
+let angle = 0;
 function drawFlakes() {
   ctx.clearRect(0, 0, w, h);
   ctx.fillStyle = "white";
@@ -155,20 +170,18 @@ function drawFlakes() {
   for (let i = 0; i < numFlakes; i++) {
     const f = flakes[i];
     ctx.moveTo(f.x, f.y);
-    ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2, true);
+    ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
   }
   ctx.fill();
   moveFlakes();
 }
 
-let angle = 0;
 function moveFlakes() {
   angle += 0.01;
   for (let i = 0; i < numFlakes; i++) {
     const f = flakes[i];
     f.y += Math.pow(f.d, 2) + 1;
     f.x += Math.sin(angle) * 0.5;
-
     if (f.y > h) {
       flakes[i] = { x: Math.random() * w, y: 0, r: f.r, d: f.d };
     }
@@ -179,8 +192,26 @@ function animate() {
   drawFlakes();
   requestAnimationFrame(animate);
 }
-
 animate();
+
+function copyScript(name) {
+  const scripts = {
+    "Murder Mystery 2": "loadstring(game:HttpGet('https://rawscripts.net/murdermystery2'))()",
+    "Ink Games": "loadstring(game:HttpGet('https://rawscripts.net/inkgames'))()",
+    "Build A Car": "loadstring(game:HttpGet('https://rawscripts.net/buildacar'))()",
+    "Apocalypse Tycoon": "loadstring(game:HttpGet('https://rawscripts.net/apocalypsetycoon'))()",
+    "Vortix ServerSide": "loadstring(game:HttpGet('https://rawscripts.net/vortixserverside'))()"
+  };
+  
+  const text = scripts[name] || "No script found.";
+  navigator.clipboard.writeText(text).then(() => showCopiedToast());
+}
+
+function showCopiedToast() {
+  const toast = document.getElementById("copy-toast");
+  toast.style.opacity = 1;
+  setTimeout(() => { toast.style.opacity = 0; }, 1500);
+}
 </script>
 </body>
 </html>
